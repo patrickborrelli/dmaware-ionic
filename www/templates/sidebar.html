@@ -30,8 +30,11 @@
         <ion-item class="item-divider">
           Services
         </ion-item>
-        <ion-item menu-close ng-click="login()">
+        <ion-item ng-show="!isAuthenticated()" menu-close ng-click="doLogin()">
           Login
+        </ion-item>
+        <ion-item ng-show="isAuthenticated()" menu-close ng-click="doLogout()">
+          Log Out
         </ion-item>
       </ion-list>
     </ion-content>

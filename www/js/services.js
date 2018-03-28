@@ -275,7 +275,8 @@ angular.module('dmaware.services', [])
         var proficiencyBonuses = [];
         var skillLookup = [];
         var spellSlotsLookup = [];
-        var  usersCharacters = [];
+        var usersCharacters = [];
+        var races = [];
         
         this.getUsersCharacters = function() {
             return usersCharacters;
@@ -295,6 +296,10 @@ angular.module('dmaware.services', [])
         
         this.getSpellSlotLookup = function() {
             return spellSlotsLookup;
+        }
+        
+        this.getRaces = function() {
+            return races;
         }
         
         this.populateCoreData = function() {
@@ -362,6 +367,19 @@ angular.module('dmaware.services', [])
                 console.log(response.data);
                 usersCharacters = response.data;
             });
+            
+            //retrieve races:
+            $http({
+                url: baseURL + 'races', 
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function(response) {                
+                console.log("Retrieved the all races from the API: ");
+                console.log(response.data);
+                races = response.data;
+            });
         }
         
     }])                    
@@ -391,9 +409,13 @@ angular.module('dmaware.services', [])
     
     }])
 
-    .service('raceService', ['$http', '$rootScope', '$state', '$q', 'baseURL', function($http, $rootScope, $state, $q, baseURL) {
+    .service('raceService', ['$http', '$rootScope', '$state', '$q', 'baseURL', 'coreDataService', function($http, $rootScope, $state, $q, baseURL, coreDataService) {
         
         var currentRace;
+        
+        this.getAllRaces = function() {
+            return coreDataService.getRaces();
+        }
         
         this.getCurrentRace = function() {
             return currentRace;

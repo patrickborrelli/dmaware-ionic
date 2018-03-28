@@ -1,0 +1,19 @@
+<ion-view view-title="DMAware - Race">
+    <ion-content>
+        <div style="padding: 10px;">
+            <div>
+                <img src="http://www.patrickborrelli.com/images/dropH.jpg" style="height: 75px; float: left; padding-right: 10px; padding-bottom: 5px;"/>
+                umans are the most common people in the worlds of D&amp;D, but they live and work alongside dwarves, elves, halflings, and countless other fantastic species.  Your character belongs to one of these peoples.
+            </div><br/>
+            <div class="card" ng-repeat="race in races">
+                <div class="item item-divider">
+                    <ion-radio ng-model="characterForm.race" value="{{race.name}}">{{race.name}}</ion-radio>      
+                </div>
+                <div class="item item-text-wrap">
+                    <p>{{race.description}}</p>
+                </div>
+            </div>
+            <button class="button button-block button-positive" ng-click="saveCurrentRace()">Next</button>
+        </div>
+    </ion-content>
+</ion-view>

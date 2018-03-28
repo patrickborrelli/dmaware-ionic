@@ -1,27 +1,29 @@
 angular.module('dmaware.controllers', [])
 
-.controller('AppCtrl', ['$scope', '$ionicModal', 'authService', 'userService', function($scope, $ionicModal, authService, userService) {
+.controller('AppCtrl', ['$scope', '$rootScope', '$ionicModal', '$state', 'authService', 'userService', function($scope, $rootScope, $ionicModal, $state, authService, userService) {
 
     // Form data for the login modal
     $scope.loginData = {};
+    $scope.registrationData = {};
     
     $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope
     }).then(function(modal) {
         $scope.loginform = modal;
     });
+    
+    $ionicModal.fromTemplateUrl('templates/register.html', {
+        scope: $scope
+    }).then(function(modal) {
+        $scope.registerform = modal;
+    });
 
     $scope.isAuthenticated = function() {
         return authService.isUserAuthenticated();
     };
-
-    $scope.closeLogin = function() {
-        $scope.loginform.hide();
-    };
-
-    // Open the login modal
-    $scope.login = function() {
-       $scope.loginform.show();
+    
+    $scope.closeRegister = function() {
+        $scope.registerform.hide();
     };
 
     $scope.getUserFullname = function() {
@@ -30,13 +32,12 @@ angular.module('dmaware.controllers', [])
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-    $scope.login();
+        console.log('Doing login', $scope.loginData);
+        $scope.loginform.show();
     };
 
-    $scope.registerUser = function() {
-        console.log('Doing registration', $scope.registration); 
-        authService.register($scope.registration);
+    $scope.closeLogin = function() {
+        $scope.loginform.hide();
     };
 
     $scope.processLogin = function() {
@@ -44,12 +45,34 @@ angular.module('dmaware.controllers', [])
         authService.login($scope.loginData);  
         $scope.closeLogin();
     };
+    
+    $scope.doRegister = function() {
+        console.log('Doing registration', $scope.registrationData);
+        $scope.registerform.show();
+    };
+
+    $scope.closeRegister = function() {
+        $scope.registerform.hide();
+    };
+
+    $scope.processRegistration = function() {
+        console.log('Doing registration', $scope.registrationData); 
+        authService.register($scope.registrationData);
+        $scope.closeRegister();
+    };
 
     $scope.processLogout = function() {
         console.log('Logging out user ' + userService.getUserFullname());
         authService.logout();
         ngDialog.close();
     };  
+    
+    $scope.switchToRace = function(username, charactername) {
+        console.log("Switching to race selection for user " + username + " and character " + charactername);
+        $rootScope.username = username;
+        $rootScope.charactername = charactername;
+        $state.go('app.race');
+    };
 }])
 
 .controller('HeaderController', ['$scope', '$rootScope', 'userService', 'authService', function($scope, $rootScope, userService, authService) {
@@ -71,51 +94,25 @@ angular.module('dmaware.controllers', [])
              
     }])
 
-.controller('HomeController', ['$scope', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
+.controller('HomeController', ['$scope', '$rootScope', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $rootScope, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
         $scope.characterForm = {
             player: '',
             character: ''
         };
-        
-        $scope.raceDisabled = true;
-        $scope.classDisabled = true;
-        $scope.alignDisabled = true;
-        $scope.abilityDisabled = true;
-        $scope.skillsDisabled = true;
-        $scope.equipDisabled = true;
-        $scope.spellsDisabled = true;
-        $scope.summaryDisabled = true;
-        $scope.activeIndex = 0;
-        
-         //init form:
-        $scope.loadIntroForm = function() {
-            var user = userService.getUserFullname();
-            console.log('loading user with full name ' + user);
-            $scope.introForm = {
-                playername: user,
-                charactername: ''
-            };
-            $scope.introFormLoaded = true;
-            return true;
-        };
-        
+                
         $scope.playDice = function() {
             var audio = new Audio('audio/dice.mp3');
             audio.play();
         }
         
-        
-        
-        //navigation        
-        $scope.switchToRace = function(player, char) {
-            console.log('Received player:' + player + ' and char:' + char);
-            $scope.characterForm.player = player;
-            $scope.characterForm.character = char;
-            $scope.characterForm.level = 1;
-            console.log($scope.characterForm);
-            $scope.raceDisabled = false; 
-            $scope.switchTab(1);
-        };
+        $scope.races = raceService.getAllRaces();
+    
+        console.log("Retrieved all races" );
+        console.log($scope.races); 
+        $scope.characterForm.player = $rootScope.username;
+        $scope.characterForm.character = $rootScope.charactername;
+        $scope.characterForm.level = 1;
+        console.log($scope.characterForm);
         
         $scope.getUserName = function() {
             return userService.getUserFullname().toUpperCase();
@@ -136,252 +133,11 @@ angular.module('dmaware.controllers', [])
         };
         
         //Race ///////////////////////////////////
-        $scope.showingHuman = true;
-        $scope.showingDwarf = false;
-        $scope.showingHillDwarf = false;
-        $scope.showingElf = false;
-        $scope.showingHighElf = false;
-        $scope.showingHalfling = false;
-        $scope.showingLightfoot = false;
-        $scope.showingGnome = false;
-        $scope.showingRockGnome = false;
-        $scope.showingHalfElf = false;
-        $scope.showingHalfOrc = false;
         
-        $scope.isShowingHuman = function() {
-            return $scope.showingHuman;
-        };
         
-        $scope.setShowingHuman = function() {
-            $scope.showingHuman = true;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingDwarf = function() {
-            return $scope.showingDwarf;
-        };
-        
-        $scope.setShowingDwarf = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = true;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingHillDwarf = function() {
-            return $scope.showingHillDwarf;
-        };
-        
-        $scope.setShowingHillDwarf = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = true;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingElf = function() {
-            return $scope.showingElf;
-        };
-        
-        $scope.setShowingElf = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = true;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingHighElf = function() {
-            return $scope.showingHighElf;
-        };
-        
-        $scope.setShowingHighElf = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = true;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingHalfling = function() {
-            return $scope.showingHalfling;
-        };
-        
-        $scope.setShowingHalfling = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = true;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingLightfoot = function() {
-            return $scope.showingLightfoot;
-        };
-        
-        $scope.setShowingLightfoot = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = true;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingGnome = function() {
-            return $scope.showingGnome;
-        };
-        
-        $scope.setShowingGnome = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = true;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingRockGnome = function() {
-            return $scope.showingRockGnome;
-        };
-        
-        $scope.setShowingRockGnome = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = true;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingHalfElf = function() {
-            return $scope.showingHalfElf;
-        };
-        
-        $scope.setShowingHalfElf = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = true;
-            $scope.showingHalfOrc = false;
-        };
-        
-        $scope.isShowingHalfOrc = function() {
-            return $scope.showingHalfOrc;
-        };
-        
-        $scope.setShowingHalfOrc = function() {
-            $scope.showingHuman = false;
-            $scope.showingDwarf = false;
-            $scope.showingHillDwarf = false;
-            $scope.showingElf = false;
-            $scope.showingHighElf = false;
-            $scope.showingHalfling = false;
-            $scope.showingLightfoot = false;
-            $scope.showingGnome = false;
-            $scope.showingRockGnome = false;
-            $scope.showingHalfElf = false;
-            $scope.showingHalfOrc = true;
-        };
-        
-        $scope.saveCurrentRace = function() {
-            if($scope.showingHuman) {
-                $scope.characterForm.race = 'Human';
-            } else if($scope.showingDwarf) {
-                $scope.characterForm.race = 'Dwarf';
-            } else if($scope.showingHillDwarf) {
-                $scope.characterForm.race = 'Hill Dwarf';
-            } else if($scope.showingElf) {
-                $scope.characterForm.race = 'Elf';
-            } else if($scope.showingHighElf) {
-                $scope.characterForm.race = 'High Elf';
-            } else if($scope.showingHalfling) {
-                $scope.characterForm.race = 'Halfling';
-            } else if($scope.showingLightfoot) {
-                $scope.characterForm.race = 'Lightfoot';
-            } else if($scope.showingGnome) {
-                $scope.characterForm.race = 'Gnome';
-            } else if($scope.showingRockGnome) {
-                $scope.characterForm.race = 'Rock Gnome';
-            } else if($scope.showingHalfElf) {
-                $scope.characterForm.race = 'Half Elf';
-            } else if($scope.showingHalfOrc) {
-                $scope.characterForm.race = 'Half Orc';
-            }          
-            
-            raceService.getRaceByName($scope.characterForm.race)
-                .then(function(response) {
-                    console.log("received race");
-                    console.log(response);
-                    raceService.setCurrentRace(response.data[0]);
-            });
-            
+        $scope.saveCurrentRace = function() {          
             console.log("current character form contains:");
             console.log($scope.characterForm);
-            $scope.classDisabled = false; 
-            $scope.switchTab(2);
         };       
         
         ////////////////////////////////////////////
