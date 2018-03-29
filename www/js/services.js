@@ -278,6 +278,7 @@ angular.module('dmaware.services', [])
         var usersCharacters = [];
         var races = [];
         var classes = [];
+        var alignments = [];
         
         this.getUsersCharacters = function() {
             return usersCharacters;
@@ -297,15 +298,19 @@ angular.module('dmaware.services', [])
         
         this.getSpellSlotLookup = function() {
             return spellSlotsLookup;
-        }
+        };
         
         this.getRaces = function() {
             return races;
-        }
+        };
         
         this.getClasses = function() {
             return classes;
-        }
+        };
+        
+        this.getAlignments = function() {
+            return alignments;
+        };
         
         this.populateCoreData = function() {
             //retrieve ability modifiers:
@@ -397,6 +402,19 @@ angular.module('dmaware.services', [])
                 console.log("Retrieved the all classes from the API: ");
                 console.log(response.data);
                 classes = response.data;
+            });
+            
+            //retrieve alignments:
+            $http({
+                url: baseURL + 'alignments', 
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function(response) {                
+                console.log("Retrieved the all alignments from the API: ");
+                console.log(response.data);
+                alignments = response.data;
             });
         }
         

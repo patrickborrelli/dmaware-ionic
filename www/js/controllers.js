@@ -90,6 +90,7 @@ angular.module('dmaware.controllers', [])
         
         $scope.races = raceService.getAllRaces();
         $scope.classes = classService.getAllClasses();
+        $scope.alignments = coreDataService.getAlignments();
     
         console.log("Retrieved all races" );
         console.log($scope.races); 
@@ -138,153 +139,16 @@ angular.module('dmaware.controllers', [])
             
             console.log("current character form contains:");
             console.log($rootScope.characterForm);
+            $state.go('app.alignment');
         };  
         
         ////////////////////////////////////////////   
         
         //Alignment ///////////////////////////////////
-        $scope.selectedLG = false;
-        $scope.selectedNG = false;
-        $scope.selectedCG = false;
-        $scope.selectedLN = false;
-        $scope.selectedTN = true;
-        $scope.selectedCN = false;
-        $scope.selectedLE = false;
-        $scope.selectedNE = false;
-        $scope.selectedCE = false;
-        
-        $scope.setSelectedLG = function() {
-            $scope.selectedLG = true;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedNG = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = true;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedCG = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = true;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedLN = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = true;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedTN = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = true;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedCN = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = true;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedLE = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = true;
-            $scope.selectedNE = false;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedNE = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = true;
-            $scope.selectedCE = false;
-        };
-        
-        $scope.setSelectedCE = function() {
-            $scope.selectedLG = false;
-            $scope.selectedNG = false;
-            $scope.selectedCG = false;
-            $scope.selectedLN = false;
-            $scope.selectedTN = false;
-            $scope.selectedCN = false;
-            $scope.selectedLE = false;
-            $scope.selectedNE = false;
-            $scope.selectedCE = true;
-        };
-        
-         $scope.saveCurrentAlignment = function() {
-            if($scope.selectedLG) {
-                $scope.characterForm.alignment = 'Lawful Good';
-            } else if($scope.selectedNG) {
-                $scope.characterForm.alignment = 'Neutral Good';
-            } else if($scope.selectedCG) {
-                $scope.characterForm.alignment = 'Chaotic Good';
-            } else if($scope.selectedLN) {
-                $scope.characterForm.alignment = 'Lawful Neutral';
-            } else if($scope.selectedTN) {
-                $scope.characterForm.alignment = 'True Neutral';
-            } else if($scope.selectedCN) {
-                $scope.characterForm.alignment = 'Chaotic Neutral';
-            } else if($scope.selectedLE) {
-                $scope.characterForm.alignment = 'Lawful Evil';
-            } else if($scope.selectedNE) {
-                $scope.characterForm.alignment = 'Neutral Evil';
-            } else if($scope.selectedCE) {
-                $scope.characterForm.alignment = 'Chaotic Evil';
-            } 
-            
+       
+        $scope.saveCurrentAlignment = function() {         
             console.log("current character form contains:");
-            console.log($scope.characterForm);
-            $scope.openAbilities();
+            console.log($rootScope.characterForm);
         };  
                 
         ////////////////////////////////////////////   
