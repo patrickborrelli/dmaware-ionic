@@ -68,37 +68,20 @@ angular.module('dmaware.controllers', [])
     };  
     
     $scope.switchToRace = function(username, charactername) {
+        $rootScope.characterForm = {
+            player: username,
+            character: charactername,
+            level: 1
+        };
         console.log("Switching to race selection for user " + username + " and character " + charactername);
-        $rootScope.username = username;
-        $rootScope.charactername = charactername;
         $state.go('app.race');
     };
 }])
 
-.controller('HeaderController', ['$scope', '$rootScope', 'userService', 'authService', function($scope, $rootScope, userService, authService) {
-    $scope.openRegister = function () {
-            ngDialog.open({ template: 'views/register.html', scope: $scope, className: 'ngdialog-theme-default  custom-width-600', controller:"RegisterController" });
-        };    
+.controller('HomeController', ['$scope', '$rootScope', '$state', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $rootScope, $state, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
         
-    $scope.openLogout = function() {
-        ngDialog.open({ template: 'views/logout.html', scope: $scope, className: 'ngdialog-theme-default', controller:"RegisterController" });
-    }; 
-
-    $scope.getUserFullname = function() {
-        return userService.getUserFullname();
-    };
-}])
-
-.controller('RegisterController', ['$scope', 'userService', '$state', 'authService', function($scope, userService, $state, authService) {
-        
-             
-    }])
-
-.controller('HomeController', ['$scope', '$rootScope', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $rootScope, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
-        $scope.characterForm = {
-            player: '',
-            character: ''
-        };
+    
+        $scope.mainForm = {};
                 
         $scope.playDice = function() {
             var audio = new Audio('audio/dice.mp3');
@@ -106,13 +89,12 @@ angular.module('dmaware.controllers', [])
         }
         
         $scope.races = raceService.getAllRaces();
+        $scope.classes = classService.getAllClasses();
     
         console.log("Retrieved all races" );
         console.log($scope.races); 
-        $scope.characterForm.player = $rootScope.username;
-        $scope.characterForm.character = $rootScope.charactername;
-        $scope.characterForm.level = 1;
-        console.log($scope.characterForm);
+    
+        console.log($rootScope.characterForm);
         
         $scope.getUserName = function() {
             return userService.getUserFullname().toUpperCase();
@@ -135,284 +117,19 @@ angular.module('dmaware.controllers', [])
         //Race ///////////////////////////////////
         
         
-        $scope.saveCurrentRace = function() {          
+        $scope.saveCurrentRace = function() {       
             console.log("current character form contains:");
-            console.log($scope.characterForm);
+            console.log($rootScope.characterForm);
+            $state.go('app.class');
         };       
         
         ////////////////////////////////////////////
         
         
         //Class ///////////////////////////////////
-        $scope.showingBarbarian = true;
-        $scope.showingBard = false;
-        $scope.showingCleric = false;
-        $scope.showingDruid = false;
-        $scope.showingFighter = false;
-        $scope.showingMonk = false;
-        $scope.showingPaladin = false;
-        $scope.showingRanger = false;
-        $scope.showingRogue = false;
-        $scope.showingSorcerer = false;
-        $scope.showingWarlock = false;
-        $scope.showingWizard = false;
-        
-        $scope.isShowingBarbarian = function() {
-            return $scope.showingBarbarian;
-        };
-        
-        $scope.setShowingBarbarian = function() {
-            $scope.showingBarbarian = true;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingBard = function() {
-            return $scope.showingBard;
-        };
-        
-        $scope.setShowingBard = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = true;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingCleric = function() {
-            return $scope.showingCleric;
-        };
-        
-        $scope.setShowingCleric = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = true;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingDruid = function() {
-            return $scope.showingDruid;
-        };
-        
-        $scope.setShowingDruid = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = true;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingFighter = function() {
-            return $scope.showingFighter;
-        };
-        
-        $scope.setShowingFighter = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = true;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingMonk = function() {
-            return $scope.showingMonk;
-        };
-        
-        $scope.setShowingMonk = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = true;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingPaladin = function() {
-            return $scope.showingPaladin;
-        };
-        
-        $scope.setShowingPaladin = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = true;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingRanger = function() {
-            return $scope.showingRanger;
-        };
-        
-        $scope.setShowingRanger = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = true;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingRogue = function() {
-            return $scope.showingRogue;
-        };
-        
-        $scope.setShowingRogue = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = true;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingSorcerer = function() {
-            return $scope.showingSorcerer;
-        };
-        
-        $scope.setShowingSorcerer = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = true;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingWarlock = function() {
-            return $scope.showingWarlock;
-        };
-        
-        $scope.setShowingWarlock = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = true;
-            $scope.showingWizard = false;
-        };
-        
-        $scope.isShowingWizard = function() {
-            return $scope.showingWizard;
-        };
-        
-        $scope.setShowingWizard = function() {
-            $scope.showingBarbarian = false;
-            $scope.showingBard = false;
-            $scope.showingCleric = false;
-            $scope.showingDruid = false;
-            $scope.showingFighter = false;
-            $scope.showingMonk = false;
-            $scope.showingPaladin = false;
-            $scope.showingRanger = false;
-            $scope.showingRogue = false;
-            $scope.showingSorcerer = false;
-            $scope.showingWarlock = false;
-            $scope.showingWizard = true;
-        };
-        
+                
         $scope.saveCurrentClass = function() {
-            if($scope.showingBarbarian) {
-                $scope.characterForm.characterclass = 'Barbarian';
-            } else if($scope.showingBard) {
-                $scope.characterForm.characterclass = 'Bard';
-            } else if($scope.showingCleric) {
-                $scope.characterForm.characterclass = 'Cleric';
-            } else if($scope.showingDruid) {
-                $scope.characterForm.characterclass = 'Druid';
-            } else if($scope.showingFighter) {
-                $scope.characterForm.characterclass = 'Fighter';
-            } else if($scope.showingMonk) {
-                $scope.characterForm.characterclass = 'Monk';
-            } else if($scope.showingPaladin) {
-                $scope.characterForm.characterclass = 'Paladin';
-            } else if($scope.showingRanger) {
-                $scope.characterForm.characterclass = 'Ranger';
-            } else if($scope.showingRogue) {
-                $scope.characterForm.characterclass = 'Rogue';
-            } else if($scope.showingSorcerer) {
-                $scope.characterForm.characterclass = 'Sorcerer';
-            } else if($scope.showingWarlock) {
-                $scope.characterForm.characterclass = 'Warlock';
-            } else if($scope.showingWizard) {
-                $scope.characterForm.characterclass = 'Wizard';
-            }
-            
-            classService.getCharClassByName($scope.characterForm.characterclass)
+            classService.getCharClassByName($rootScope.characterForm.characterclass)
                 .then(function(response) {
                     console.log("received class");
                     console.log(response);
@@ -420,9 +137,7 @@ angular.module('dmaware.controllers', [])
             });
             
             console.log("current character form contains:");
-            console.log($scope.characterForm);
-            $scope.alignDisabled = false; 
-            $scope.switchTab(3);
+            console.log($rootScope.characterForm);
         };  
         
         ////////////////////////////////////////////   

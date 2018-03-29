@@ -43,6 +43,16 @@ angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services'])
                 controller: 'HomeController'
             }
         }
+    })
+    
+    .state('app.class', {
+        url: '/class',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/class.html',
+                controller: 'HomeController'
+            }
+        }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/intro');
