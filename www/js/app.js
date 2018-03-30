@@ -63,6 +63,26 @@ angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services'])
                 controller: 'HomeController'
             }
         }
+    })
+    
+    .state('app.ability', {
+        url: '/ability',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/ability.html',
+                controller: 'HomeController'
+            }
+        }
+    })
+    
+    .state('app.skill', {
+        url: '/skill',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/skill.html',
+                controller: 'HomeController'
+            }
+        }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/intro');

@@ -1,0 +1,50 @@
+<ion-view view-title="DMAware - Skill">
+    <ion-content>
+        <div style="padding: 10px;">
+            <div>
+                <img src="http://www.patrickborrelli.com/images/dropS.jpg" style="height: 75px; float: left; padding-right: 10px; padding-bottom: 5px;"/>
+                ix abilities provide a quick description of every creature's physical and mental characteristics:
+                <br /><br />
+                <ul>
+                    <li><strong>Strength</strong> - physical power</li>
+                    <li><strong>Dexterity</strong> - agility</li>
+                    <li><strong>Constitution</strong> - endurance</li>
+                    <li><strong>Wisdom</strong> - perception and insight</li>
+                    <li><strong>Intelligence</strong> - reasoning and memory</li>
+                    <li><strong>Charisma</strong> - force of personality</li>
+                </ul>
+            </div><br/>
+            <div class="row">
+                <div class="col col-25"><button ng-click="strDisabled || rollStr();"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.strTotal"></div>
+                <div class="col col-center">Strength</div>
+            </div>
+            <div class="row">
+                <div class="col col-25"><button ng-click="dexDisabled || rollDex()"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.dexTotal"></div>
+                <div class="col col-center">Dexterity</div>
+            </div>
+            <div class="row">
+                <div class="col col-25"><button ng-click="conDisabled || rollCon()"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.conTotal"></div>
+                <div class="col col-center">Constitution</div>
+            </div>
+            <div class="row">
+                <div class="col col-25"><button ng-click="wisDisabled || rollWis()"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.wisTotal"></div>
+                <div class="col col-center">Widsdom</div>
+            </div>
+            <div class="row">
+                <div class="col col-25"><button ng-click="intDisabled || rollInt()"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.intTotal"></div>
+                <div class="col col-center">Intelligence</div>
+            </div>
+            <div class="row">
+                <div class="col col-25"><button ng-click="chaDisabled || rollCha()"><img src="img/die2.png" /></button></div>
+                <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.chaTotal"></div>
+                <div class="col col-center">Charisma</div>
+            </div>
+            <button class="button button-block button-positive" ng-click="saveCurrentAbilities()">Next</button>
+        </div>
+    </ion-content>
+</ion-view>

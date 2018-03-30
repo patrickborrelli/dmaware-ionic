@@ -149,6 +149,7 @@ angular.module('dmaware.controllers', [])
         $scope.saveCurrentAlignment = function() {         
             console.log("current character form contains:");
             console.log($rootScope.characterForm);
+            $state.go('app.ability');
         };  
                 
         ////////////////////////////////////////////   
@@ -161,48 +162,40 @@ angular.module('dmaware.controllers', [])
         $scope.wisDisabled = false;
         $scope.intDisabled = false;
         $scope.chaDisabled = false;
+    
+        $scope.abilityForm = {
+                strRoll1: 0,
+                strRoll2: 0,
+                strRoll3: 0,
+                strRoll4: 0,
+                strTotal: 0,
+                dexRoll1: 0,
+                dexRoll2: 0,
+                dexRoll3: 0,
+                dexRoll4: 0,
+                dexTotal: 0,
+                conRoll1: 0,
+                conRoll2: 0,
+                conRoll3: 0,
+                conRoll4: 0,
+                conTotal: 0,
+                wisRoll1: 0,
+                wisRoll2: 0,
+                wisRoll3: 0,
+                wisRoll4: 0,
+                wisTotal: 0,
+                intRoll1: 0,
+                intRoll2: 0,
+                intRoll3: 0,
+                intRoll4: 0,
+                intTotal: 0,
+                chaRoll1: 0,
+                chaRoll2: 0,
+                chaRoll3: 0,
+                chaRoll4: 0,
+                chaTotal: 0
+        };
         
-        $scope.openAbilities = function() {
-            $scope.abilityDisabled = false; 
-            $scope.switchTab(4);
-            if($scope.strDisabled) {
-                //leave this form
-            } else {
-                $scope.abilityForm = {
-                    strRoll1: 0,
-                    strRoll2: 0,
-                    strRoll3: 0,
-                    strRoll4: 0,
-                    strTotal: 0,
-                    dexRoll1: 0,
-                    dexRoll2: 0,
-                    dexRoll3: 0,
-                    dexRoll4: 0,
-                    dexTotal: 0,
-                    conRoll1: 0,
-                    conRoll2: 0,
-                    conRoll3: 0,
-                    conRoll4: 0,
-                    conTotal: 0,
-                    wisRoll1: 0,
-                    wisRoll2: 0,
-                    wisRoll3: 0,
-                    wisRoll4: 0,
-                    wisTotal: 0,
-                    intRoll1: 0,
-                    intRoll2: 0,
-                    intRoll3: 0,
-                    intRoll4: 0,
-                    intTotal: 0,
-                    chaRoll1: 0,
-                    chaRoll2: 0,
-                    chaRoll3: 0,
-                    chaRoll4: 0,
-                    chaTotal: 0
-                };
-            }
-            
-        }
         
         $scope.rollStr = function() {
             $scope.playDice();
@@ -211,7 +204,8 @@ angular.module('dmaware.controllers', [])
             var str3 = $scope.abilityForm.strRoll3 = Math.floor((Math.random() * 6) + 1);
             var str4 = $scope.abilityForm.strRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = str1 + str2 + str3 + str4;
-            $scope.abilityForm.strTotal = total - $scope.findLowest([str1, str2, str3, str4]); 
+            $rootScope.characterForm.str = total - $scope.findLowest([str1, str2, str3, str4]); 
+            $scope.abilityForm.strTotal = $rootScope.characterForm.str;
             $scope.strDisabled = true;
         };
         
@@ -222,7 +216,8 @@ angular.module('dmaware.controllers', [])
             var dex3 = $scope.abilityForm.dexRoll3 = Math.floor((Math.random() * 6) + 1);
             var dex4 = $scope.abilityForm.dexRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = dex1 + dex2 + dex3 + dex4;
-            $scope.abilityForm.dexTotal = total - $scope.findLowest([dex1, dex2, dex3, dex4]);
+            $rootScope.characterForm.dex = total - $scope.findLowest([dex1, dex2, dex3, dex4]);
+            $scope.abilityForm.dexTotal = $rootScope.characterForm.dex;
             $scope.dexDisabled = true;
         };
         
@@ -233,7 +228,8 @@ angular.module('dmaware.controllers', [])
             var con3 = $scope.abilityForm.conRoll3 = Math.floor((Math.random() * 6) + 1);
             var con4 = $scope.abilityForm.conRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = con1 + con2 + con3 + con4;
-            $scope.abilityForm.conTotal = total - $scope.findLowest([con1, con2, con3, con4]);  
+            $rootScope.characterForm.con = total - $scope.findLowest([con1, con2, con3, con4]);
+            $scope.abilityForm.conTotal = $rootScope.characterForm.con;            
             $scope.conDisabled = true;
         };
         
@@ -244,7 +240,8 @@ angular.module('dmaware.controllers', [])
             var wis3 = $scope.abilityForm.wisRoll3 = Math.floor((Math.random() * 6) + 1);
             var wis4 = $scope.abilityForm.wisRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = wis1 + wis2 + wis3 + wis4;
-            $scope.abilityForm.wisTotal = total - $scope.findLowest([wis1, wis2, wis3, wis4]); 
+            $rootScope.characterForm.wis = total - $scope.findLowest([wis1, wis2, wis3, wis4]); 
+            $scope.abilityForm.wisTotal = $rootScope.characterForm.wis;
             $scope.wisDisabled = true;
         };
         
@@ -255,7 +252,8 @@ angular.module('dmaware.controllers', [])
             var int3 = $scope.abilityForm.intRoll3 = Math.floor((Math.random() * 6) + 1);
             var int4 = $scope.abilityForm.intRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = int1 + int2 + int3 + int4;
-            $scope.abilityForm.intTotal = total - $scope.findLowest([int1, int2, int3, int4]); 
+            $rootScope.characterForm.int = total - $scope.findLowest([int1, int2, int3, int4]);
+            $scope.abilityForm.intTotal = $rootScope.characterForm.int; 
             $scope.intDisabled = true;
         };
         
@@ -266,7 +264,8 @@ angular.module('dmaware.controllers', [])
             var cha3 = $scope.abilityForm.chaRoll3 = Math.floor((Math.random() * 6) + 1);
             var cha4 = $scope.abilityForm.chaRoll4 = Math.floor((Math.random() * 6) + 1);
             var total = cha1 + cha2 + cha3 + cha4;
-            $scope.abilityForm.chaTotal = total - $scope.findLowest([cha1, cha2, cha3, cha4]);  
+            $rootScope.characterForm.cha = total - $scope.findLowest([cha1, cha2, cha3, cha4]);  
+            $scope.abilityForm.chaTotal  = $rootScope.characterForm.cha;
             $scope.chaDisabled = true;
         };
         
@@ -278,17 +277,10 @@ angular.module('dmaware.controllers', [])
             return lowest;
         };                
         
-        $scope.saveCurrentAbilities = function() {
-            $scope.characterForm.str = $scope.abilityForm.strTotal;
-            $scope.characterForm.dex = $scope.abilityForm.dexTotal;
-            $scope.characterForm.con = $scope.abilityForm.conTotal;
-            $scope.characterForm.wis = $scope.abilityForm.wisTotal;
-            $scope.characterForm.int = $scope.abilityForm.intTotal;
-            $scope.characterForm.cha = $scope.abilityForm.chaTotal;            
-
+        $scope.saveCurrentAbilities = function() {  
             console.log("current character form contains:");
             console.log($scope.characterForm);
-            $scope.openSkills();
+            $state.go('app.skill');
         };  
         
         ////////////////////////////////////////////   
