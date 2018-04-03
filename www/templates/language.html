@@ -1,0 +1,62 @@
+<ion-view view-title="DMAware - Languages">
+    <ion-content>
+        <div style="padding: 10px;">
+            <div>
+                <img src="http://www.patrickborrelli.com/images/dropP.jpg" style="height: 75px; float: left; padding-right: 10px; padding-bottom: 5px;"/>
+                layer Character (PC) skills are utilized in many aspects of gameplay. In the 5th Edition rules, all players have some level of all skills, based on the ability associated with a particular skill. For example, a player who has a Strength score of 14 gets a +2 modifier for Strength. So for any Strength related skills (Athletics), the player will get the same bonus to that particular skill.<br/><br/>Additionally, depending on their character class, players get to choose a proficiency in some number of skills. The character class may also limit the list of skills a character can be proficient in (i.e., a Fighter can choose two skills to be proficient in from Acrobatics, Animal Handling, Athletics, History, Insight, Intimidation, Perception and Survival). Any skill a player is proficient in has the player's proficiency bonus applied to that skill as well.<br/><br/>
+                <span style="font-weight: bold; color: blue;">{{raceString}}</span>
+            </div><br/>
+            <ul class="list">
+                <li class="item item-checkbox">
+                     Common
+                    <label class="checkbox">
+                        <input type="checkbox" name="common" class="myLanguages" ng-disabled="languagesDisabled()" checklist-model="selectedLanguages" value="Common">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Dwarvish
+                    <label class="checkbox">
+                        <input type="checkbox" name="dwarvish" class="myLanguages" ng-disabled="languagesDisabled()" checklist-model="selectedLanguages" value="Dwarvish">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Elvish
+                    <label class="checkbox">
+                        <input type="checkbox"  name="elvish" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="elvishSelected" checklist-model="selectedLanguages" value="Elvish">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Giant
+                    <label class="checkbox">
+                        <input type="checkbox"  name="giant" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="giantSelected" checklist-model="selectedLanguages" value="Giant">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Gnomish
+                    <label class="checkbox">
+                        <input type="checkbox"  name="gnomish" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="gnomishSelected" checklist-model="selectedLanguages" value="Gnomish">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Goblin
+                    <label class="checkbox">
+                        <input type="checkbox"  name="goblin" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="goblinSelected" checklist-model="selectedLanguages" value="Goblin">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Halfling
+                    <label class="checkbox">
+                        <input type="checkbox"  name="halfling" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="halflingSelected" checklist-model="selectedLanguages" value="Halfling">
+                    </label>
+                </li>
+                <li class="item item-checkbox">
+                     Orcish
+                    <label class="checkbox">
+                        <input type="checkbox"  name="orcish" class="myLanguages" ng-disabled="languagesDisabled()" ng-checked="orcishSelected" checklist-model="selectedLanguages" value="Orcish">
+                    </label>
+                </li>
+            </ul>
+            <button class="button button-block button-positive" ng-click="saveCurrentLanguages()">Next</button>
+        </div>
+    </ion-content>
+</ion-view>

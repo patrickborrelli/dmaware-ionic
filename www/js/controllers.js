@@ -353,8 +353,7 @@ angular.module('dmaware.controllers', [])
             $scope.sleiDisabled = true;
             $scope.steaDisabled = true;
             $scope.survDisabled = true;
-        };
-        
+        };        
         
         $scope.skillForm = { 
             acrobatics: false, 
@@ -382,13 +381,7 @@ angular.module('dmaware.controllers', [])
             goblin: false,
             halfling: false,
             orcish: false                 
-        }; 
-        
-        $scope.openSkills = function() {            
-            $scope.determineSkillState($scope.characterForm.race, $scope.characterForm.characterclass);
-            $scope.skillsDisabled = false; 
-            $scope.switchTab(5); 
-        };
+        };      
         
         $scope.languagesDisabled = function() {
             $('.myLanguages').change(function(){
@@ -398,13 +391,13 @@ angular.module('dmaware.controllers', [])
                     $('input.myLanguages').removeAttr('disabled');
             });
         };
-        
+            
         $scope.disabledSkills = function() {
-            $('.mySkills').change(function(){
-                if($('input.mySkills').filter(':checked').length == $scope.skillCount)
-                    $('input.mySkills:not(:checked)').attr('disabled', 'disabled');
+            jQuery('.mySkills').change(function(){
+                if(jQuery('input.mySkills').filter(':checked').length == $scope.skillCount)
+                    jQuery('input.mySkills:not(:checked)').attr('disabled', 'disabled');
                 else
-                    $('input.mySkills').removeAttr('disabled');
+                    jQuery('input.mySkills').removeAttr('disabled');
             });
         };
         
@@ -548,7 +541,7 @@ angular.module('dmaware.controllers', [])
                     $scope.skillCount = 2;
                     break;
             }
-            
+                        
             //next set all the available languages based on race:
             switch(race) {
                 case 'Dwarf':
@@ -648,7 +641,9 @@ angular.module('dmaware.controllers', [])
         $scope.resetAllLanguages = function() {
             $('input.myLanguages').attr('disabled', false);            
             $('input.myLanguages').prop('checked', false);
-        }; 
+        };
+    
+        $scope.determineSkillState($rootScope.characterForm.race, $rootScope.characterForm.characterclass);
         
         $scope.getSkillCount = function() {
             var count = 0;
@@ -713,79 +708,78 @@ angular.module('dmaware.controllers', [])
         };
         
         $scope.saveCurrentSkills = function() {
-            $scope.characterForm.skills = $scope.selectedSkills;
-            $scope.characterForm.languages = $scope.selectedLanguages;
+            $rootScope.characterForm.skills = $scope.selectedSkills;
             console.log("current character form contains:");
             console.log($scope.characterForm);
-            $scope.openEquipment();
+            $state.go('app.language');
+        };
+        
+        $scope.saveCurrentLanguages = function() {
+            $rootScope.characterForm.languages = $scope.selectedLanguages;
+            console.log("current character form contains:");
+            console.log($scope.characterForm);
+            $rootScope.primaryWeapons = classService.getCurrentClass().primary_weapon;
+            $rootScope.secondaryWeapons = classService.getCurrentClass().secondary_weapon;
+            $rootScope.tertiaryWeapons = classService.getCurrentClass().tertiary_weapon;
+            $rootScope.armor = classService.getCurrentClass().armor;
+            $rootScope.mandatoryItems = classService.getCurrentClass().mandatory_equipment;
+
+            $state.go('app.equipment');
         };
         
         ////////////////////////////////////////////   
         
         //Equipment/////////////////////////////////
+        $rootScope.equipForm = {
+            selectedPrimary: null,
+            selectedSecondary: null,
+            selectedTertiary: null,
+            selectedArmor: null           
+        }; 
         
-        
-        $scope.openEquipment = function() { 
-            $scope.equipForm = {
-                selectedPrimary: null,
-                selectedSecondary: null,
-                selectedTertiary: null,
-                selectedArmor: null           
-            };
-            $scope.equipDisabled = false; 
-            $scope.switchTab(6);             
-            
-            console.log(classService.getCurrentClass());
-            $scope.primaryWeapons = classService.getCurrentClass().primary_weapon;
-            $scope.secondaryWeapons = classService.getCurrentClass().secondary_weapon;
-            $scope.tertiaryWeapons = classService.getCurrentClass().tertiary_weapon;
-            $scope.armor = classService.getCurrentClass().armor;
-            $scope.mandatoryItems = classService.getCurrentClass().mandatory_equipment;
-                        
-            $scope.hasPrimary = function() {
-                if($scope.primaryWeapons.length > 0) {
-                    return true;
-                } else {
-                    $scope.equipForm.selectedPrimary = null;
-                    return false;
-                }
-            }
-            
-            $scope.hasSecondary = function() {
-                if($scope.secondaryWeapons.length > 0) {
-                    return true;
-                } else {
-                    $scope.equipForm.selectedSecondary = null;
-                    return false;
-                }
-            }
-            
-            $scope.hasTertiary = function() {
-                if($scope.tertiaryWeapons.length > 0) {
-                    return true;
-                } else {                    
-                    $scope.equipForm.selectedTertiary = null;
-                    return false;
-                }
-            }
-            
-            $scope.hasArmor = function() {
-                if($scope.armor.length > 0) {
-                    return true;
-                } else {
-                    $scope.equipForm.selectedArmor = null;
-                    return false;
-                }
-            }
-            
-            $scope.hasMandatory = function() {
-                if($scope.mandatoryItems.length > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+        $scope.hasPrimary = function() {
+            if($rootScope.primaryWeapons.length > 0) {
+                return true;
+            } else {
+                $rootScope.equipForm.selectedPrimary = null;
+                return false;
             }
         };
+
+        $scope.hasSecondary = function() {
+            if($rootScope.secondaryWeapons.length > 0) {
+                return true;
+            } else {
+                $rootScope.equipForm.selectedSecondary = null;
+                return false;
+            }
+        };
+
+        $scope.hasTertiary = function() {
+            if($rootScope.tertiaryWeapons.length > 0) {
+                return true;
+            } else {                    
+                $rootScope.equipForm.selectedTertiary = null;
+                return false;
+            }
+        };
+
+        $scope.hasArmor = function() {
+            if($rootScope.armor.length > 0) {
+                return true;
+            } else {
+                $rootScope.equipForm.selectedArmor = null;
+                return false;
+            }
+        };
+
+        $scope.hasMandatory = function() {
+            if($rootScope.mandatoryItems.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        };        
         
         $scope.saveCurrentEquipment = function() {
             var equip = [];

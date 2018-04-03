@@ -1,4 +1,4 @@
-angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services'])
+angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services', 'checklist-model'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -80,6 +80,26 @@ angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services'])
         views: {
             'mainContent': {
                 templateUrl: 'templates/skill.html',
+                controller: 'HomeController'
+            }
+        }
+    })
+    
+    .state('app.language', {
+        url: '/language',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/language.html',
+                controller: 'HomeController'
+            }
+        }
+    })
+    
+    .state('app.equipment', {
+        url: '/equipment',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/equipment.html',
                 controller: 'HomeController'
             }
         }

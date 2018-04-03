@@ -1,0 +1,51 @@
+<ion-view view-title="DMAware - Equipment">
+    <ion-content>
+        <div style="padding: 10px;">
+            <div>
+                <img src="http://www.patrickborrelli.com/images/dropE.jpg" style="height: 75px; float: left; padding-right: 10px; padding-bottom: 5px;"/>
+                quipment is critical in the success of any party.  For an adventurer, the availability of armor, weapons, backpacks, rope, and similar goods is of paramount importance, since proper equipment can mean the difference between life and death in a dungeon or the untamed wilds.
+            </div><br/>
+            <div class="list" ng-show="hasPrimary()">
+                <div class="item item-divider">
+                    Primary
+                </div>
+                <label class="item item-radio" ng-repeat="weapon in primaryWeapons">
+                    <input type="radio" ng-value="weapon" ng-model="$parent.equipForm.selectedPrimary" name="primary"/>
+                    <div class="item-content">{{weapon.name}}</div>
+                    <i class="radio-icon ion-checkmark"></i>
+                </label>
+            </div>        
+            <div class="list" ng-show="hasSecondary()">
+                <div class="item item-divider">
+                    Secondary
+                </div>
+                <label class="item item-radio" ng-repeat="weapon in secondaryWeapons">
+                    <input type="radio" ng-value="weapon" ng-model="$parent.equipForm.selectedSecondary" name="secondary"/>
+                    <div class="item-content">{{weapon.name}}</div>
+                    <i class="radio-icon ion-checkmark"></i>
+                </label>
+            </div>        
+            <div class="list" ng-show="hasTertiary()">
+                <div class="item item-divider">
+                    Tertiary
+                </div>
+                <label class="item item-radio" ng-repeat="weapon in tertiaryWeapons">
+                    <input type="radio" ng-value="weapon" ng-model="$parent.equipForm.selectedTertiary" name="tertiary"/>
+                    <div class="item-content">{{weapon.name}}</div>
+                    <i class="radio-icon ion-checkmark"></i>
+                </label>
+            </div>        
+            <div class="list" ng-show="hasArmor()">
+                <div class="item item-divider">
+                    Armor
+                </div>
+                <label class="item item-radio" ng-repeat="weapon in armor">
+                    <input type="radio" ng-value="weapon" ng-model="$parent.equipForm.selectedArmor" name="armor"/>
+                    <div class="item-content">{{weapon.name}}</div>
+                    <i class="radio-icon ion-checkmark"></i>
+                </label>
+            </div>
+            <button class="button button-block button-positive" ng-click="saveCurrentEquipment()">Next</button>
+        </div>
+    </ion-content>
+</ion-view>
