@@ -103,6 +103,36 @@ angular.module('dmaware', ['ionic', 'dmaware.controllers', 'dmaware.services', '
                 controller: 'HomeController'
             }
         }
+    })
+    
+    .state('app.cantrip', {
+        url: '/cantrip',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/cantrip.html',
+                controller: 'HomeController'
+            }
+        }
+    })
+    
+    .state('app.spellcasting', {
+        url: '/spellcasting',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/spellcasting.html',
+                controller: 'HomeController'
+            }
+        }
+    })
+    
+    .state('app.summary', {
+        url: '/summary',
+        views: {
+            'mainContent': {
+                templateUrl: 'templates/summary.html',
+                controller: 'HomeController'
+            }
+        }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/intro');

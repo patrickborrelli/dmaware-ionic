@@ -995,19 +995,23 @@ angular.module('dmaware.services', [])
         };
         
         function getSpellsAsString(form) {
-            var spellString = '[';
-            
-            var spells = form.spells;
-            
-            for(var i = 0; i < spells.length; i++) {
-                spellString += '"' + spells[i]._id + '", ';
+            if(form.spells.length > 0) {
+                var spellString = '[';
+
+                var spells = form.spells;
+
+                for(var i = 0; i < spells.length; i++) {
+                    spellString += '"' + spells[i]._id + '", ';
+                }
+
+                spellString = spellString.slice(0, -2);
+
+                spellString += ']';
+
+                return spellString;
+            } else {
+                return "[]";
             }
-            
-            spellString = spellString.slice(0, -2);
-            
-            spellString += ']';
-            
-            return spellString;
         };
         
         function getSpellSaveDC(form) {

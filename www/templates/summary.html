@@ -1,0 +1,19 @@
+<ion-view view-title="DMAware - Summary">
+    <ion-content>
+        <div style="padding: 10px;" ng-show="hasCharacters()">            
+            <div class="card" ng-repeat="character in characters">
+                <div class="item item-divider">
+                    {{character.name}} - <br/>Level {{character.character_level}} {{character.race.name}} {{character.character_class.name}}    
+                </div>
+                <div class="btn-group"> 
+                    <button type="button" class="btn btn-xs btn-info" >Print Sheet</button>&nbsp;&nbsp;
+                    <button type="button" class="btn btn-xs btn-info" ng-click="deleteCharacter(character._id);">Delete Record</button> 
+                </div>
+            </div>
+        </div>
+        
+        <div style="padding: 10px;" ng-show="!hasCharacters()">  
+            <h3>No saved characters.</h3>
+        </div>
+    </ion-content>
+</ion-view>

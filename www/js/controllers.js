@@ -92,11 +92,6 @@ angular.module('dmaware.controllers', [])
         $scope.classes = classService.getAllClasses();
         $scope.alignments = coreDataService.getAlignments();
     
-        console.log("Retrieved all races" );
-        console.log($scope.races); 
-    
-        console.log($rootScope.characterForm);
-        
         $scope.getUserName = function() {
             return userService.getUserFullname().toUpperCase();
         };
@@ -115,12 +110,18 @@ angular.module('dmaware.controllers', [])
             return authService.isAdmin();
         };
         
-        //Race ///////////////////////////////////
-        
+        //Race ///////////////////////////////////      
         
         $scope.saveCurrentRace = function() {       
             console.log("current character form contains:");
             console.log($rootScope.characterForm);
+            raceService.getRaceByName($rootScope.characterForm.race)
+                .then(function(response) {
+                    console.log("received race");
+                    console.log(response);
+                    raceService.setCurrentRace(response.data[0]);
+            });
+            
             $state.go('app.class');
         };       
         
@@ -135,6 +136,25 @@ angular.module('dmaware.controllers', [])
                     console.log("received class");
                     console.log(response);
                     classService.setCurrentClass(response.data[0]);
+            });
+            
+            userService.getUserCantrips($rootScope.characterForm.characterclass)
+            .then(function(response) {
+                    console.log("received cantrips");
+                    console.log(response.data);
+                    $rootScope.cantrips = response.data;
+                    console.log("inside Scope holds cantrips: " );
+                    console.log($rootScope.cantrips);
+            });
+
+            //get spells based on level and class:
+            userService.getUserSpells($rootScope.characterForm.characterclass, $rootScope.characterForm.level)
+            .then(function(response) {
+                    console.log("received spells");
+                    console.log(response.data);
+                    if($rootScope.characterForm.characterclass != 'Ranger' &&
+                       $rootScope.characterForm.characterclass != 'Paladin')
+                            $rootScope.spells = response.data;
             });
             
             console.log("current character form contains:");
@@ -779,8 +799,8 @@ angular.module('dmaware.controllers', [])
             } else {
                 return false;
             }
-        };        
-        
+        };    
+            
         $scope.saveCurrentEquipment = function() {
             var equip = [];
             
@@ -806,127 +826,108 @@ angular.module('dmaware.controllers', [])
                 }
             }
             
-            $scope.characterForm.equipment = equip;            
+            $rootScope.selectedCantrips = [];
+            $rootScope.selectedSpells = [];
+            $rootScope.cantripText = '';
+            $rootScope.spellText = '';
+            $rootScope.cantripCount = 2;
+            $rootScope.spellCount = 0; 
+            
+            $rootScope.characterForm.equipment = equip;            
             console.log("current character form contains:");
-            console.log($scope.characterForm);
+            console.log($rootScope.characterForm);
             $scope.openSpells();
+            $state.go('app.cantrip');
         };
         
         ////////////////////////////////////////////   
         
-        //Spells/////////////////////////////////
-        $scope.openSpells = function() { 
-            
-            $scope.spellsDisabled = false; 
-            $scope.switchTab(7);
-            $scope.selectedCantrips = [];
-            $scope.selectedSpells = [];
-            $scope.cantripText = '';
-            $scope.spellText = '';
-            $scope.cantripCount = 2;
-            $scope.spellCount = 0;            
-            
-            //get cantrips based on level and class:
-            userService.getUserCantrips($scope.characterForm.characterclass)
-            .then(function(response) {
-                    console.log("received cantrips");
-                    console.log(response.data);
-                    $scope.cantrips = response.data;
-            });
-            
-            //get spells based on level and class:
-            userService.getUserSpells($scope.characterForm.characterclass, $scope.characterForm.level)
-            .then(function(response) {
-                    console.log("received spells");
-                    console.log(response.data);
-                    if($scope.characterForm.characterclass != 'Ranger' &&
-                       $scope.characterForm.characterclass != 'Paladin')
-                            $scope.spells = response.data;
-            });
-            
-            switch($scope.characterForm.characterclass) {
+        //Spells/////////////////////////////////         
+        
+        $scope.openSpells = function() {        
+            switch($rootScope.characterForm.characterclass) {
                 case 'Barbarian':
-                    $scope.cantripText = "Barbarians are not magic users and do not get cantrips or spells."
+                    $rootScope.cantripText = "Barbarians are not magic users and do not get cantrips or spells."
                     break;
                 case 'Bard':
-                    $scope.cantripText = "Bards at 1st level know 2 cantrips. Select 2 cantrips from the list to the right."
-                    $scope.cantripCount = 2;
-                    $scope.spellText = "Bards at 1st level know 4 spells. Select 4 spells from the list to the right";
-                    $scope.spellCount = 4;
+                    $rootScope.cantripText = "Bards at 1st level know 2 cantrips. Select 2 cantrips from the list."
+                    $rootScope.cantripCount = 2;
+                    $rootScope.spellText = "Bards at 1st level know 4 spells. Select 4 spells from the list";
+                    $rootScope.spellCount = 4;
                     break;
                 case 'Cleric':
-                    $scope.cantripText = "Clerics at 1st level know 3 cantrips. Select 3 cantrips from the list to the right."
-                    $scope.cantripCount = 3;
-                    $scope.spellText = "Clerics know all of their spells, none to select.";
-                    $scope.spellCount = 0;
+                    $rootScope.cantripText = "Clerics at 1st level know 3 cantrips. Select 3 cantrips from the list."
+                    $rootScope.cantripCount = 3;
+                    $rootScope.spellText = "Clerics know all of their spells, none to select.";
+                    $rootScope.spellCount = 0;
                     break;
                 case 'Druid':
-                    $scope.cantripText = "Druids at 1st level know 2 cantrips. Select 2 cantrips from the list to the right."
-                    $scope.cantripCount = 2;
-                    $scope.spellText = "Druids know all of their spells, none to select.";
-                    $scope.spellCount = 0;
+                    $rootScope.cantripText = "Druids at 1st level know 2 cantrips. Select 2 cantrips from the list."
+                    $rootScope.cantripCount = 2;
+                    $rootScope.spellText = "Druids know all of their spells, none to select.";
+                    $rootScope.spellCount = 0;
                     break;
                 case 'Fighter':
-                    $scope.cantripText = "Fighters are not magic users and do not get cantrips or spells."
+                    $rootScope.cantripText = "Fighters are not magic users and do not get cantrips or spells."
                     break;
                 case 'Monk':
-                    $scope.cantripText = "Monks are not magic users and do not get cantrips or spells."
+                    $rootScope.cantripText = "Monks are not magic users and do not get cantrips or spells."
                     break;
                 case 'Paladin':
-                    $scope.cantripText = "Paladins do not get magical abilities at first level."
+                    $rootScope.cantripText = "Paladins do not get magical abilities at first level."
                     break;
                 case 'Ranger':
-                    $scope.cantripText = "Rangers do not get magical abilities at first level."
+                    $rootScope.cantripText = "Rangers do not get magical abilities at first level."
                     break;
                 case 'Rogue':
-                    $scope.cantripText = "Rogues are not magic users and do not get cantrips or spells."
+                    $rootScope.cantripText = "Rogues are not magic users and do not get cantrips or spells."
                     break;
                 case 'Sorcerer':
-                    $scope.cantripText = "Sorcerers at 1st level know 4 cantrips. Select 4 cantrips from the list to the right."
-                    $scope.cantripCount = 4;
-                    $scope.spellText = "Sorcerers at 1st level know 2 spells. Select 2 spells from the list to the right.";
-                    $scope.spellCount = 2;
+                    $rootScope.cantripText = "Sorcerers at 1st level know 4 cantrips. Select 4 cantrips from the list."
+                    $rootScope.cantripCount = 4;
+                    $rootScope.spellText = "Sorcerers at 1st level know 2 spells. Select 2 spells from the list.";
+                    $rootScope.spellCount = 2;
                     break;
                 case 'Warlock':
-                    $scope.cantripText = "Warlocks at 1st level know 2 cantrips. Select 2 cantrips from the list to the right."
-                    $scope.cantripCount = 2;
-                    $scope.spellText = "Warlocks at 1st level know 2 spells. Select 2 spells from the list to the right.";
-                    $scope.spellCount = 2;
+                    $rootScope.cantripText = "Warlocks at 1st level know 2 cantrips. Select 2 cantrips from the list."
+                    $rootScope.cantripCount = 2;
+                    $rootScope.spellText = "Warlocks at 1st level know 2 spells. Select 2 spells from the list.";
+                    $rootScope.spellCount = 2;
                     break;
                 case 'Wizard':
-                    $scope.cantripText = "Wizards at 1st level know 3 cantrips. Select 3 cantrips from the list to the right."
-                    $scope.cantripCount = 3;
-                    $scope.spellText = "Wizards know all of their spells, none to select.";
-                    $scope.spellCount = 0;
+                    $rootScope.cantripText = "Wizards at 1st level know 3 cantrips. Select 3 cantrips from the list."
+                    $rootScope.cantripCount = 3;
+                    $rootScope.spellText = "Wizards know all of their spells, none to select.";
+                    $rootScope.spellCount = 0;
                     break;
+            }      
+            console.log("cantrip text = " + $rootScope.cantripText);
+        };
+                
+        $scope.disableCantrips = function() {
+            $('.myCantrips').change(function(){
+                if($('input.myCantrips').filter(':checked').length == $rootScope.cantripCount)
+                    $('input.myCantrips:not(:checked)').attr('disabled', 'disabled');
+                else
+                    $('input.myCantrips').removeAttr('disabled');
+            });
+        };
+
+        $scope.disableSpells = function() {
+            if($rootScope.spellCount == 0) {
+                $('input.mySpells').prop('checked', true);
+                $('input.mySpells').attr('disabled', true);
             }
-            
-            $scope.disableCantrips = function() {
-                $('.myCantrips').change(function(){
-                    if($('input.myCantrips').filter(':checked').length == $scope.cantripCount)
-                        $('input.myCantrips:not(:checked)').attr('disabled', 'disabled');
-                    else
-                        $('input.myCantrips').removeAttr('disabled');
-                });
-            };
-                        
-            $scope.disableSpells = function() {
-                if($scope.spellCount == 0) {
-                    $('input.mySpells').prop('checked', true);
-                    $('input.mySpells').attr('disabled', true);
-                }
-                $('.mySpells').change(function(){
-                    if($('input.mySpells').filter(':checked').length == $scope.spellCount) {
-                        $('input.mySpells:not(:checked)').attr('disabled', 'disabled');
-                    } else
-                        $('input.mySpells').removeAttr('disabled');
-                });
-            };
-            
+            $('.mySpells').change(function(){
+                if($('input.mySpells').filter(':checked').length == $rootScope.spellCount) {
+                    $('input.mySpells:not(:checked)').attr('disabled', 'disabled');
+                } else
+                    $('input.mySpells').removeAttr('disabled');
+            });
         };
         
         $scope.hasCantrips = function() {
-            return ($scope.cantrips != null && $scope.cantrips.length > 0);  
+            return ($rootScope.cantrips != null && $rootScope.cantrips.length > 0);  
         };
         
         $scope.hasSpells = function() {
@@ -934,7 +935,7 @@ angular.module('dmaware.controllers', [])
         };
         
         $scope.getAllSpells = function() {
-            var spells = $scope.spells;
+            var spells = $rootScope.spells;
             var mySpells = [];
             for(var i = 0; i < spells.length; i++) {
                 mySpells.push(spells[i]);
@@ -942,9 +943,9 @@ angular.module('dmaware.controllers', [])
             return mySpells;
         };
         
-        $scope.saveCurrentSpells = function() {
-            $scope.characterForm.cantrips = $scope.selectedCantrips; 
-            $scope.characterForm.spells = $scope.selectedSpells; 
+        $scope.saveCurrentCantrips = function() {
+            $rootScope.characterForm.cantrips = $rootScope.selectedCantrips; 
+            $scope.characterForm.spells = $rootScope.selectedSpells; 
             if($scope.characterForm.characterclass == 'Cleric' ||
                $scope.characterForm.characterclass == 'Druid' ||
                $scope.characterForm.characterclass == 'Wizard') {
@@ -952,33 +953,43 @@ angular.module('dmaware.controllers', [])
                 $scope.characterForm.spells = $scope.getAllSpells();
             }
             console.log("current character form contains:");
-            console.log($scope.characterForm);
+            console.log($rootScope.characterForm);
+            $state.go('app.spellcasting');
+        };
+    
+        $scope.saveCurrentSpells = function() {
+            $rootScope.characterForm.spells = $rootScope.selectedSpells; 
+            if($rootScope.characterForm.characterclass == 'Cleric' ||
+               $rootScope.characterForm.characterclass == 'Druid' ||
+               $rootScope.characterForm.characterclass == 'Wizard') {
+                //characters of these classes know all first level spells so add them to the form:
+                $rootScope.characterForm.spells = $scope.getAllSpells();
+            }
+            console.log("current character form contains:");
+            console.log($rootScope.characterForm);
             $scope.openSummary();
+            $state.go('app.summary');
         };
         
         ////////////////////////////////////////////   
         
         //Summary/////////////////////////////////
-        $scope.openSummary = function() { 
-            $scope.summaryDisabled = false; 
-            $scope.switchTab(8);
-            
-            $scope.hasCharacters = function() {
-                $scope.characters = coreDataService.getUsersCharacters();
-                if($scope.characters != null) 
+        $scope.openSummary = function() {             
+            //create character and save in scope
+            $rootScope.character = characterService.generateCharacter($rootScope.characterForm);
+        };
+    
+        $scope.deleteCharacter = function(charId) {
+            characterService.deleteCharacter(charId);                
+        }
+    
+        $scope.hasCharacters = function() {
+                $rootScope.characters = coreDataService.getUsersCharacters();
+                if($rootScope.characters != null) 
                     return true;
                 else
                     return false;                
             };
-            
-            $scope.deleteCharacter = function(charId) {
-                characterService.deleteCharacter(charId);
-                
-            }
-            
-            //create character and save in scope
-            $scope.character = characterService.generateCharacter($scope.characterForm);
-        };
        
      }])
 ;
