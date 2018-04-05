@@ -5,7 +5,7 @@ angular.module('dmaware.controllers', [])
     // Form data for the login modal
     $scope.loginData = {};
     $scope.registrationData = {};
-    
+        
     $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope
     }).then(function(modal) {
@@ -17,6 +17,13 @@ angular.module('dmaware.controllers', [])
     }).then(function(modal) {
         $scope.registerform = modal;
     });
+    
+    $ionicModal.fromTemplateUrl('templates/logout.html', {
+        scope: $scope
+    }).then(function(modal) {
+        $scope.logoutform = modal;
+    });
+        
 
     $scope.isAuthenticated = function() {
         return authService.isUserAuthenticated();
@@ -34,10 +41,25 @@ angular.module('dmaware.controllers', [])
     $scope.doLogin = function() {
         console.log('Doing login', $scope.loginData);
         $scope.loginform.show();
+    };    
+    
+    $scope.openLogout = function() {
+        $scope.logoutform.show();
+    }; 
+
+    $scope.processLogout = function() {
+        console.log('Logging out user ' + userService.getUserFullname());
+        authService.logout();
+        $scope.logoutform.hide();
+        $scope.logoutform.remove();
     };
 
     $scope.closeLogin = function() {
         $scope.loginform.hide();
+    };
+    
+    $scope.closeLogout = function() {
+        $scope.logoutform.hide();
     };
 
     $scope.processLogin = function() {
@@ -60,29 +82,26 @@ angular.module('dmaware.controllers', [])
         authService.register($scope.registrationData);
         $scope.closeRegister();
     };
-
-    $scope.processLogout = function() {
-        console.log('Logging out user ' + userService.getUserFullname());
-        authService.logout();
-        ngDialog.close();
-    };  
     
     $scope.switchToRace = function(username, charactername) {
         $rootScope.characterForm = {
-            player: username,
-            character: charactername,
-            level: 1
+            level: 1,
+            playername: username,
+            character: charactername
         };
         console.log("Switching to race selection for user " + username + " and character " + charactername);
         $state.go('app.race');
     };
 }])
 
-.controller('HomeController', ['$scope', '$rootScope', '$state', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $rootScope, $state, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
-        
+.controller('HomeController', ['$scope', '$rootScope', '$ionicModal', '$state', '$timeout', 'authService', 'userService', 'classService', 'raceService', 'characterService', 'coreDataService', function($scope, $rootScope, $ionicModal, $state, $timeout, authService, userService, classService, raceService, characterService, coreDataService) {
     
-        $scope.mainForm = {};
-                
+        $ionicModal.fromTemplateUrl('templates/logout.html', {
+            scope: $scope
+        }).then(function(modal) {
+            $scope.logoutform = modal;
+        });
+        
         $scope.playDice = function() {
             var audio = new Audio('audio/dice.mp3');
             audio.play();
@@ -96,12 +115,6 @@ angular.module('dmaware.controllers', [])
             return userService.getUserFullname().toUpperCase();
         };
 
-        $scope.switchTab = function(tabIndex){ 
-            $timeout(function(){
-                $scope.activeIndex = tabIndex;
-            });
-        };
-        
         $scope.isAuthenticated = function() {
             return authService.isUserAuthenticated();
         };
@@ -215,7 +228,6 @@ angular.module('dmaware.controllers', [])
                 chaRoll4: 0,
                 chaTotal: 0
         };
-        
         
         $scope.rollStr = function() {
             $scope.playDice();
@@ -404,6 +416,9 @@ angular.module('dmaware.controllers', [])
         };      
         
         $scope.languagesDisabled = function() {
+            if($scope.languageCount == 0) {
+                $('input.myLanguages').attr('disabled', true);
+            }
             $('.myLanguages').change(function(){
                 if($('input.myLanguages').filter(':checked').length == $scope.languageCount)
                     $('input.myLanguages:not(:checked)').attr('disabled', 'disabled');
@@ -451,7 +466,7 @@ angular.module('dmaware.controllers', [])
                     $scope.skillCount = 2;
                     break;
                 case 'Druid':
-                    $scope.classString = "Druids choose two skills from Arcana, Animal Handling, Insight, Medicine, Nature, Perception, Religion, and Survival.";
+                    $scope.classString = "Druids choose two skills from Animal Handling, Arcana, Insight, Medicine, Nature, Perception, Religion, and Survival.";
                     $scope.setAllDisabled();
                     $scope.arcaDisabled = false;
                     $scope.animDisabled = false;
@@ -572,7 +587,7 @@ angular.module('dmaware.controllers', [])
                     $scope.selectedLanguages.push("Common");                    
                     $scope.selectedLanguages.push("Dwarvish");
                     $scope.setAllLangDisabled();
-                    $scope.languageCount = 2;
+                    $scope.languageCount = 0;
                     break;
                 case 'Elf': 
                     $scope.raceString = "You can speak, read, and write Common and Elvish. Elvish is fluid, with subtle intonations and intricate grammar. Elven literature is rich and varied, and their songs and poems are famous among other races. Many bards learn their language so they can add Elvish ballads to their repertoires.";
@@ -581,7 +596,7 @@ angular.module('dmaware.controllers', [])
                     $scope.selectedLanguages.push("Common");
                     $scope.selectedLanguages.push("Elvish");
                     $scope.setAllLangDisabled();
-                    $scope.languageCount = 2;
+                    $scope.languageCount = 0;
                     break;
                 case 'High Elf':
                     $scope.raceString = "You can speak, read, and write Common and Elvish. Elvish is fluid, with subtle intonations and intricate grammar. Elven literature is rich and varied, and their songs and poems are famous among other races. Many bards learn their language so they can add Elvish ballads to their repertoires. As a High Elf, you can speak one extra language of your choice."; 
@@ -601,7 +616,7 @@ angular.module('dmaware.controllers', [])
                     $scope.selectedLanguages.push("Common");
                     $scope.selectedLanguages.push("Halfling");
                     $scope.setAllLangDisabled();
-                    $scope.languageCount = 2;
+                    $scope.languageCount = 0;
                     break;
                 case 'Human':
                     $scope.raceString = "You can speak, read, and write Common and one extra language of your choice. Humans typically learn the languages of other peoples they deal with, including obscure dialects. They are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on.";
@@ -618,7 +633,7 @@ angular.module('dmaware.controllers', [])
                     $scope.selectedLanguages.push("Common");
                     $scope.selectedLanguages.push("Gnomish");
                     $scope.setAllLangDisabled();
-                    $scope.languageCount = 2;
+                    $scope.languageCount = 0;
                     break;
                 case 'Half Elf':
                     $scope.raceString = "You can speak, read, and write Common, Elvish, and one extra language of your choice.";
@@ -637,7 +652,7 @@ angular.module('dmaware.controllers', [])
                     $scope.selectedLanguages.push("Common");
                     $scope.selectedLanguages.push("Orcish");
                     $scope.setAllLangDisabled();
-                    $scope.languageCount = 2;
+                    $scope.languageCount = 0;
                     break;
             }
         };
@@ -836,8 +851,23 @@ angular.module('dmaware.controllers', [])
             $rootScope.characterForm.equipment = equip;            
             console.log("current character form contains:");
             console.log($rootScope.characterForm);
-            $scope.openSpells();
-            $state.go('app.cantrip');
+            
+            //determine if class has spells at first level to determine next step:
+            if($rootScope.characterForm.characterclass == 'Bard' ||
+               $rootScope.characterForm.characterclass == 'Cleric' ||
+               $rootScope.characterForm.characterclass == 'Druid' ||
+               $rootScope.characterForm.characterclass == 'Sorcerer' ||
+               $rootScope.characterForm.characterclass == 'Warlock' ||
+               $rootScope.characterForm.characterclass == 'Wizard'   
+             ) {
+                $scope.openSpells();
+                $state.go('app.cantrip');
+            } else {
+                $rootScope.characterForm.spells = [];
+                $scope.openSummary();
+                $state.go('app.summary');
+            }
+            
         };
         
         ////////////////////////////////////////////   
@@ -981,15 +1011,32 @@ angular.module('dmaware.controllers', [])
     
         $scope.deleteCharacter = function(charId) {
             characterService.deleteCharacter(charId);                
-        }
+        };
+    
+        $scope.openLogout = function() {
+            $scope.logoutform.show();
+        }; 
+        
+        $scope.processLogout = function() {
+            console.log('Logging out user ' + userService.getUserFullname());
+            authService.logout();
+            $scope.logoutform.hide();
+            $scope.logoutform.remove();
+        };
     
         $scope.hasCharacters = function() {
-                $rootScope.characters = coreDataService.getUsersCharacters();
-                if($rootScope.characters != null) 
-                    return true;
-                else
-                    return false;                
-            };
+            $rootScope.characters = coreDataService.getUsersCharacters();
+            if($rootScope.characters != null) 
+                return true;
+            else
+                return false;                
+        };
+    
+        $scope.createNewCharacter = function() {
+            //return to start
+            $rootScope.characterForm.charactername = '';
+            $state.go('app.intro');
+        };
        
      }])
 ;

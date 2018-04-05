@@ -172,7 +172,7 @@ angular.module('dmaware.services', [])
                 console.log(response);                 
                 isAuthenticated = false;
                 destroyUserCredentials();
-                $state.go("app");
+                $state.go("app.intro");
             }, function(errResponse) {           
                 var message = '\
                 <div class="ngdialog-message">\
@@ -995,7 +995,7 @@ angular.module('dmaware.services', [])
         };
         
         function getSpellsAsString(form) {
-            if(form.spells.length > 0) {
+            if(form.spells != null && form.spells.length > 0) {
                 var spellString = '[';
 
                 var spells = form.spells;

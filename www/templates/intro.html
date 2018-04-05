@@ -11,14 +11,14 @@
                 <div class="list">
                     <label class="item item-input">
                         <span class="input-label">Player</span>
-                        <input type="text" disabled ng-model="introForm.playername" placeholder={{getUserFullname()}}>
+                        <input type="text" disabled ng-model="characterForm.playername" placeholder={{getUserFullname()}}>
                     </label>
                     <label class="item item-input">
                         <span class="input-label">Character</span>
-                        <input type="text" ng-model="introForm.charactername">
+                        <input type="text" ng-model="characterForm.charactername">
                     </label>
                     <label class="item">
-                        <button class="button button-block button-positive" ng-click="switchToRace(getUserFullname(), introForm.charactername)">Begin</button>
+                        <button class="button button-block button-positive" ng-click="switchToRace(getUserFullname(), characterForm.charactername)">Begin</button>
                     </label>
                 </div>
             </form>
