@@ -88,7 +88,7 @@ angular.module('dmaware.services', [])
         
       }])
 
-    .service('authService', ['$http', 'baseURL', '$state', 'userService', 'coreDataService', function($http, baseURL, $state, userService, coreDataService) {
+    .service('authService', ['$http', 'baseURL', '$state', '$ionicPopup', 'userService', 'coreDataService', function($http, baseURL, $state, $ionicPopup,userService, coreDataService) {
         var authToken = undefined;
         var isAuthenticated = false;  
         var isAdmin = false;
@@ -111,6 +111,18 @@ angular.module('dmaware.services', [])
                 },
                 data: loginData
             });  
+        };
+        
+        var showPopup = function(message) {
+            var alertPopup = $ionicPopup.alert({
+                    title: 'Login failed!',
+                    template: 'Please check your credentials - ' + message,
+                    okType: 'button-assertive' // Appears red to inidicate error
+                });
+                
+            alertPopup.then(function(res) {
+                console.log('done with popup');
+            });
         };
         
         this.login = function(loginData) {
@@ -146,15 +158,8 @@ angular.module('dmaware.services', [])
                 $state.go("app.intro");
             }, function(errResponse) {
                 isAuthenticated = false;            
-                var message = '\
-                <div class="ngdialog-message">\
-                <div><h3>Login Unsuccessful</h3></div>' +
-                  '<div><p>' +  errResponse + '</p><p>' +
-                    errResponse + '</p></div>' +
-                '<div class="ngdialog-buttons">\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click=confirm("OK")>OK</button>\
-                </div>'
-
+                //showPopup(errResponse.data.err.message);
+                $state.go("app.intro");
             });
         };        
         

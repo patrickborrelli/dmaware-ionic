@@ -6,18 +6,21 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="processLogin()">
-      <div class="list">
+    <form ng-submit="processLogin()" name="loginForm" novalidate>
+      <div class="list" ng-class="{'has-error has-feedback':loginForm.password.$invalid}">
         <label class="item item-input">
           <span class="input-label">Username</span>
           <input type="text" ng-model="loginData.username">
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="loginData.password">
+          <input type="password" name="password" ng-model="loginData.password" required>
+            <span style="color:red" ng-show="!loginForm.password.$pristine && loginForm.password.$invalid">
+                <span ng-show="loginForm.password.$error.required">Username is required.</span>
+            </span>
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Log in</button>
+          <button class="button button-block button-positive" ng-disabled="loginForm.$invalid" type="submit">Log in</button>
         </label>
       </div>
     </form>

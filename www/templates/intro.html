@@ -7,7 +7,7 @@
                 DMAware will take you through a step-by-step process, asking you for selections along the way.  You will make all of the fun decisions, and DMAware will do all of the mundane work.<br/><br/>
             </div><br/>
            
-            <form ng-show="isAuthenticated()">
+            <form ng-show="isAuthenticated()" name="charForm" novalidate>
                 <div class="list">
                     <label class="item item-input">
                         <span class="input-label">Player</span>
@@ -15,10 +15,13 @@
                     </label>
                     <label class="item item-input">
                         <span class="input-label">Character</span>
-                        <input type="text" ng-model="characterForm.charactername">
+                        <input type="text" ng-model="characterForm.charactername" name='charname' required>
+                        <span style="color:red" ng-show="!charForm.charName.$pristine && charForm.charName.$invalid">
+                            <span ng-show="charForm.charName.$error.required">Character name is required.</span>
+                        </span>
                     </label>
                     <label class="item">
-                        <button class="button button-block button-positive" ng-click="switchToRace(getUserFullname(), characterForm.charactername)">Begin</button>
+                        <button class="button button-block button-positive" ng-disabled="charForm.$invalid"  ng-click="switchToRace(getUserFullname(), characterForm.charactername)">Begin</button>
                     </label>
                 </div>
             </form>

@@ -44,7 +44,7 @@
                 <div class="col col-25"><input type="text" disabled style="width: 40px; height: 40px; margin: 0px; padding: 0px;" ng-model="abilityForm.chaTotal"></div>
                 <div class="col col-center">Charisma</div>
             </div>
-            <button class="button button-block button-positive" ng-click="saveCurrentAbilities()">Next</button>
+            <button class="button button-block button-positive" ng-click="saveCurrentAbilities()" ng-disabled="!abilityForm.strTotal || !abilityForm.dexTotal || !abilityForm.conTotal || !abilityForm.wisTotal || !abilityForm.intTotal || !abilityForm.chaTotal">Next</button>
         </div>
     </ion-content>
 </ion-view>

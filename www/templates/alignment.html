@@ -13,7 +13,7 @@
                     <p>{{alignment.description}}</p>
                 </div>
             </div>
-            <button class="button button-block button-positive" ng-click="saveCurrentAlignment()">Next</button>
+            <button class="button button-block button-positive" ng-click="saveCurrentAlignment()" ng-disabled="!characterForm.alignment">Next</button>
         </div>
     </ion-content>
 </ion-view>

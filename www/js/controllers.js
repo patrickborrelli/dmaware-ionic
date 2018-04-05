@@ -602,8 +602,8 @@ angular.module('dmaware.controllers', [])
                     $scope.raceString = "You can speak, read, and write Common and Elvish. Elvish is fluid, with subtle intonations and intricate grammar. Elven literature is rich and varied, and their songs and poems are famous among other races. Many bards learn their language so they can add Elvish ballads to their repertoires. As a High Elf, you can speak one extra language of your choice."; 
                     $scope.setLanguageChecked('common');
                     $scope.setLanguageChecked('elvish');
-                    $scope.setLanguageDisabled('common');
-                    $scope.setLanguageDisabled('elvish');
+                    $("#common").attr("disabled",true);
+                    $("#elvish").attr("disabled",true);
                     $scope.selectedLanguages.push("Common");
                     $scope.selectedLanguages.push("Elvish");
                     $scope.languageCount = 3;
@@ -646,7 +646,7 @@ angular.module('dmaware.controllers', [])
                     $scope.languageCount = 3;
                     break;
                 case 'Half Orc':
-                    $scope.classString = "You can speak, read, and write Common and Orc. Orc is a harsh, grating language with hard consonants. It has no script of its own but is written in the Dwarvish script.";
+                    $scope.raceString = "You can speak, read, and write Common and Orc. Orc is a harsh, grating language with hard consonants. It has no script of its own but is written in the Dwarvish script.";
                     $scope.setLanguageChecked('common');
                     $scope.setLanguageChecked('orcish');
                     $scope.selectedLanguages.push("Common");

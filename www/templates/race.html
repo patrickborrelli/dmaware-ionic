@@ -13,7 +13,7 @@
                     <p>{{race.short_description}}</p>
                 </div>
             </div>
-            <button class="button button-block button-positive" ng-click="saveCurrentRace()">Next</button>
+            <button class="button button-block button-positive" ng-click="saveCurrentRace()" ng-disabled="!characterForm.race">Next</button>
         </div>
     </ion-content>
 </ion-view
