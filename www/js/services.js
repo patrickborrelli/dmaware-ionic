@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dmaware.services', [])
-    //.constant("baseURL","https://matchaware-rest.herokuapp.com/")
-    .constant("baseURL","http://localhost:3000/")
+    .constant("baseURL","https://dmaware-rest.herokuapp.com/")
+    //.constant("baseURL","http://localhost:3000/")
 
     .service('userService', ['$http', '$rootScope', '$state', 'baseURL', function($http, $rootScope, $state, baseURL) {
        
